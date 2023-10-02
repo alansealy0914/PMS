@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Product } from 'src/app/models/product.model';
+import { ProductsService } from 'src/app/services/products.service';
 
 @Component({
   selector: 'app-products',
@@ -7,31 +9,22 @@ import { Product } from 'src/app/models/product.model';
   styleUrls: ['./products.component.css'],
 })
 export class ProductsComponent implements OnInit {
-  products: Product[] = [
-    {
-      id: '786543',
-      name: 'T-Shirt',
-      type: 'Garment',
-      color: 'Blue',
-      price: 9.99,
-    },
-    {
-      id: '786544',
-      name: 'Iphone 14 Pro',
-      type: 'Mobile',
-      color: 'Gold',
-      price: 1499,
-    },
-    {
-      id: '786545',
-      name: 'Iphone 13 Pro',
-      type: 'Mobile',
-      color: 'White',
-      price: 1299,
-    },
-  ];
+  products: Product[] = [];
 
-  constructor() {}
+  //Consume the Products from the API
+  constructor(
+    private productService: ProductsService,
+    private router: Router
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.productService.getAllProducts().subscribe({
+      next: (products) => {
+        this.products = products;
+      },
+      error: (response) => {
+        console.log(response);
+      },
+    });
+  }
 }
